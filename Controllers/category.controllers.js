@@ -1,7 +1,5 @@
 
 
-const req = require("express/lib/request");
-const { where } = require("sequelize");
 const db=require("../models");
 const Category = db.Category;
 
@@ -42,6 +40,7 @@ exports.getAll = (req,res)=>{
 exports.getOne =(req,res)=>{
 
     const categoryId= req.params.id;
+
 
     Category.findByPk(categoryId)
     .then((category)=>{
