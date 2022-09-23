@@ -4,16 +4,10 @@ const db=require("../models");
 const Category = db.Category;
 
 exports.create = (req,res)=>{
-
-    const {name,description} =req.body;
-
-    if(!name){
-        res.status(400).send({message:"Name of the category cannot be empty"});
-    }
-
+    
     const category={
-        name:name,
-        description:description
+        name:req.body.name,
+        description:req.body.description
     };
 
     Category.create(category)
