@@ -24,6 +24,8 @@ require("./Routes/category.routes")(app);
 //import product routes
 require("./Routes/product.routes")(app);
 
+//import Auth routes 
+require("./Routes/auth.routes")(app);
 
 
 app.listen(process.env.PORT,()=>{

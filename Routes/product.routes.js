@@ -13,7 +13,6 @@ module.exports=(app)=>{
     //delete 
 
     //Route for getting a list of products under a particular category
-
     app.get("/ecomm/api/v1/category/:categoryId/products",requestValidator.validateCategoryPassed,ProductControllers.findProductsUnderCategory);
 
 
