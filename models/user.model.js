@@ -20,10 +20,6 @@ module.exports = (Sequelize,sequelize)=>{
         password:{
             type:Sequelize.STRING,
             allowNull:false
-        },
-        role:{
-            type:Sequelize.INTEGER,
-            allowNull:false
         }
     });
 
