@@ -4,6 +4,8 @@ const config = require("./configs/db.config");
 const bodyParser = require("body-parser");
 require("dotenv").config();
 
+const {Role} = require("./models");
+
 const app = express();
 
 app.use(bodyParser.json());
@@ -18,6 +20,22 @@ db.sequelize.sync({force:false})
 })
 
 
+/**
+ * Add roles 
+ */
+
+//  Role.create({
+//     id:1,
+//     name:"user"
+// });
+
+// Role.create({
+//     id:2,
+//     name:"admin"
+// })
+
+
+
 //imported category routes
 require("./Routes/category.routes")(app);
 
@@ -26,6 +44,13 @@ require("./Routes/product.routes")(app);
 
 //import Auth routes 
 require("./Routes/auth.routes")(app);
+
+
+//import User routes 
+require("./Routes/user.routes")(app);
+
+
+
 
 
 app.listen(process.env.PORT,()=>{
