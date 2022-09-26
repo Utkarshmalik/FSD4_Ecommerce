@@ -1,5 +1,6 @@
 
-const {Product,Category} = require("../models");
+const {Product,Category,Sequelize} = require("../models");
+const Op= Sequelize.Op;
 
 exports.create=(req,res)=>{
 
@@ -15,9 +16,59 @@ exports.create=(req,res)=>{
     })
 }
 
+// GET localhost:8080/ecomm/api/v1/products?minCost=80000
+// GET localhost:8080/ecomm/api/v1/products?maxCost=80000
+// GET localhost:8080/ecomm/api/v1/products?minCost=60000&maxCost=80000
+
 exports.findAll = (req,res)=>{
 
-    Product.findAll()
+    const {name,minCost,maxCost} = req.query;
+
+
+    console.log(req.query);
+
+    if(name){
+        productsPromise=Product.findAll({
+            where:{
+                name:name
+            }
+        })    
+    }
+    else if(minCost && maxCost){
+
+        productsPromise=Product.findAll({
+            where:{
+            cost:{
+                [Op.gte]:minCost,
+                [Op.lte]:maxCost
+            }
+        }
+        })
+    }
+    else if(minCost){
+        productsPromise=Product.findAll({
+            where:{
+            cost:{
+                [Op.gte]:minCost            
+            }
+        }
+        })
+
+    }
+    else if(maxCost){
+        productsPromise=Product.findAll({
+            where:{
+            cost:{
+                [Op.lte]:maxCost           
+             }
+        }
+        })
+    }
+    else{
+        productsPromise=Product.findAll();
+    }
+  
+    productsPromise
     .then(products=>{
         res.send(products)
     })
