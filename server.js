@@ -2,6 +2,7 @@
 const express = require("express");
 const config = require("./configs/db.config");
 const bodyParser = require("body-parser");
+const {authJWT} = require("./Middlewares");
 require("dotenv").config();
 
 const {Role} = require("./models");
@@ -36,14 +37,16 @@ db.sequelize.sync({force:false})
 
 
 
+//import Auth routes 
+require("./Routes/auth.routes")(app);
+
+app.use(authJWT.verifyToken);
+
 //imported category routes
 require("./Routes/category.routes")(app);
 
 //import product routes
 require("./Routes/product.routes")(app);
-
-//import Auth routes 
-require("./Routes/auth.routes")(app);
 
 
 //import User routes 

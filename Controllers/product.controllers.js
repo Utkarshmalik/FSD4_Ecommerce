@@ -22,6 +22,8 @@ exports.create=(req,res)=>{
 
 exports.findAll = (req,res)=>{
 
+
+    console.log(req.user);
     const {name,minCost,maxCost} = req.query;
 
 
