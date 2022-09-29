@@ -1,9 +1,9 @@
 
 const ProductControllers= require("../Controllers/product.controllers");
-const {requestValidator} = require("../Middlewares");
+const {requestValidator, authJWT} = require("../Middlewares");
 
 module.exports=(app)=>{
-    app.post("/ecomm/api/v1/products",requestValidator.validateProductRequest,ProductControllers.create)
+    app.post("/ecomm/api/v1/products",[requestValidator.validateProductRequest, authJWT.verifyToken],ProductControllers.create)
 
     app.get("/ecomm/api/v1/products",ProductControllers.findAll);
 

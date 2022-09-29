@@ -15,13 +15,20 @@ const verifyToken= (req,res,next)=>{
         if(err){
             return res.status(401).send({message:"Unauthorized!"});
         };
-
         const userId=decoded.id;
-
          const user= await User.findByPk(userId);
-         req.user=user;
-         next();
+         const roles = await user.getRoles();
 
+         const eligibleRoles=[];
+
+         roles.forEach(role=>{
+             eligibleRoles.push(role.name);
+         })
+
+         req.user=user;
+         req.roles=eligibleRoles;
+         req.isAdmin=eligibleRoles.includes('admin');
+         next();
     });
 }
 

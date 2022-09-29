@@ -4,6 +4,11 @@ const Op= Sequelize.Op;
 
 exports.create=(req,res)=>{
 
+    if(!req.isAdmin){
+        return res.status(403).send({message:"OOPS! you are unauthorized to perform this task"});
+    }
+
+
     const {name,description,cost,categoryId}=req.body;
     const product = {name,description,cost,categoryId};
 
@@ -22,8 +27,6 @@ exports.create=(req,res)=>{
 
 exports.findAll = (req,res)=>{
 
-
-    console.log(req.user);
     const {name,minCost,maxCost} = req.query;
 
 

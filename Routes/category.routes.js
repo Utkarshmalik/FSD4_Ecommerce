@@ -1,13 +1,13 @@
 
 const categoryControllers= require("../Controllers/category.controllers");
-const {requestValidator} = require("../Middlewares");
+const {requestValidator, authJWT} = require("../Middlewares");
 
 
 
 module.exports =(app)=>{
 
     //create a new category
-    app.post("/ecomm/api/v1/category",requestValidator.validateCategoryRequest,categoryControllers.create);
+    app.post("/ecomm/api/v1/category",[requestValidator.validateCategoryRequest, authJWT.verifyToken],categoryControllers.create);
 
     //get all the routes 
     app.get("/ecomm/api/v1/category",categoryControllers.getAll);
@@ -16,9 +16,9 @@ module.exports =(app)=>{
     app.get("/ecomm/api/v1/category/:id",categoryControllers.getOne);
 
     //update a route by category id 
-    app.put("/ecomm/api/v1/category/:id",categoryControllers.update);
+    app.put("/ecomm/api/v1/category/:id",[authJWT.verifyToken], categoryControllers.update);
 
     //delete a route by a category id 
-    app.delete("/ecomm/api/v1/category/:id",categoryControllers.delete);
+    app.delete("/ecomm/api/v1/category/:id",[authJWT.verifyToken], categoryControllers.delete);
 
 }
