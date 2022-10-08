@@ -1,3 +1,4 @@
+const { where } = require("sequelize");
 const {Cart ,Product, User} = require("../models");
 
 exports.create=async (req,res)=>{
@@ -41,22 +42,28 @@ exports.update= async (req,res)=>{
 
     const updatedProducts=[...existingproducts, ...newProducts];
 
-    userCart.setProducts(updatedProducts);
+    //calculate the updated cost 
+
+    const totalCost = findTotalCost(updatedProducts);
+
+    //update the cart model with totalCost 
+
+    await Cart.update({cost:totalCost},{where:{
+        id:cart.id
+    }});
+
+    await userCart.setProducts(updatedProducts);
 
     res.send(updatedProducts);
 }
 
 
+
+
+
 exports.findCart= async (req,res)=>{
-    const {products} = await findCartAndProducts(req.user.id);
-
-    let cost=0;
-
-    for(let i=0;i<products.length;i++){
-        cost+= products[i].cost;
-    }
-
-    res.send({products,totalCost:cost});
+    const {cart,products} = await findCartAndProducts(req.user.id);
+    res.send({products,totalCost:cart.cost});
 }
 
 
@@ -82,6 +89,16 @@ exports.deleteProductFromCart = async (req,res)=>{
         return product.id!==productId;
     })
 
+  //calculate the updated cost 
+
+  const totalCost = findTotalCost(updatedProducts);
+
+  //update the cart model with totalCost 
+
+  await Cart.update({cost:totalCost},{where:{
+      id:cart.id
+  }});
+  
     await userCart.setProducts(updatedProducts);
 
     res.send(updatedProducts);
@@ -104,4 +121,12 @@ const findCartAndProducts = async (userId)=>{
     const existingproducts= await userCart.getProducts();
 
     return  {cart:userCart,products:existingproducts};
+}
+
+const findTotalCost=(products)=>{
+    let cost=0;
+    for(let i=0;i<products.length;i++){
+        cost+= products[i].cost;
+    }
+    return cost;
 }
