@@ -8,16 +8,16 @@ exports.create=(req,res)=>{
         return res.status(403).send({message:"OOPS! you are unauthorized to perform this task"});
     }
 
-
     const {name,description,cost,categoryId}=req.body;
+
     const product = {name,description,cost,categoryId};
 
-    Product.create(product)
-    .then(product=>{
-        res.status(201).send(product);
+    Product.create(product).then(product=>{
+        return res.status(201).send(product);
     })
     .catch((err)=>{
-        res.status(500).send({message:err.message || "Something went wrong"});
+        console.log("inside catch")
+        return res.status(500).send({message:err.message || "Something went wrong"});
     })
 }
 
