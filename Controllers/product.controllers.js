@@ -27,16 +27,22 @@ exports.create=(req,res)=>{
 
 exports.findAll = (req,res)=>{
 
-    const {name,minCost,maxCost} = req.query;
+    const {name,minCost,maxCost,page,size} = req.query;
 
+    const limit = size?parseInt(size):15;
+    const offset= page?page*limit:0; 
 
-    console.log(req.query);
+    console.log(limit);
+    console.log(offset);
+
 
     if(name){
         productsPromise=Product.findAll({
             where:{
                 name:name
-            }
+            },
+            limit:limit,
+            offset:offset
         })    
     }
     else if(minCost && maxCost){
@@ -46,8 +52,9 @@ exports.findAll = (req,res)=>{
             cost:{
                 [Op.gte]:minCost,
                 [Op.lte]:maxCost
-            }
-        }
+            }},
+            limit:limit,
+            offset:offset
         })
     }
     else if(minCost){
@@ -56,7 +63,9 @@ exports.findAll = (req,res)=>{
             cost:{
                 [Op.gte]:minCost            
             }
-        }
+        },
+        limit:limit,
+        offset:offset
         })
 
     }
@@ -66,11 +75,15 @@ exports.findAll = (req,res)=>{
             cost:{
                 [Op.lte]:maxCost           
              }
-        }
+        }, limit:limit,
+        offset:offset
         })
     }
     else{
-        productsPromise=Product.findAll();
+        productsPromise=Product.findAll({
+            limit:limit,
+            offset:offset
+        });
     }
   
     productsPromise
